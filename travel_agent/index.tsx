@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
+import { useConversation } from '@elevenlabs/react';
 import {
   MapPin,
   History,
@@ -22,9 +23,11 @@ import {
   ExternalLink,
   MicOff,
   MessageCircle,
-  Bot
+  Bot,
+  Volume2,
+  VolumeX
 } from 'lucide-react';
-import { useConversation } from '@elevenlabs/react';
+
 
 // --- Constants & Data ---
 
@@ -468,113 +471,214 @@ const N8nChatModal = ({ onClose }: { onClose: () => void }) => {
   );
 };
 
-// 8. n8n Voice Agent Modal (ElevenLabs ConvAI)
-const N8nVoiceModal = ({ onClose }: { onClose: () => void }) => {
-  const conversation = useConversation({
-    onConnect: () => console.log('Connected to ElevenLabs'),
-    onDisconnect: () => console.log('Disconnected from ElevenLabs'),
-    onMessage: (message) => console.log('Message:', message),
-    onError: (error) => console.error('Error:', error),
-  });
 
-  const { status, isSpeaking } = conversation;
+// --- Main App Component ---
 
-  const toggleConversation = async () => {
-    if (status === 'connected') {
-      await conversation.endSession();
-    } else {
-      try {
-        // @ts-ignore
-        await conversation.startSession({
-          agentId: import.meta.env.VITE_ELEVENLABS_AGENT_ID,
-        });
-      } catch (error) {
-        console.error('Failed to start conversation:', error);
-      }
+const VoiceAgentButton = () => {
+  const { startSession, endSession, status, isSpeaking } = useConversation();
+  const [isSessionActive, setIsSessionActive] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isConnecting, setIsConnecting] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+
+  const handleStartCall = async () => {
+    try {
+      setError(null);
+      setIsConnecting(true);
+      // Request microphone permission first
+      await navigator.mediaDevices.getUserMedia({ audio: true });
+
+      // Start the conversation session
+      await startSession({
+        agentId: 'agent_8201k9pp5feqf0g8kb0wpj6z3jft',
+        connectionType: 'webrtc',
+      });
+      setIsSessionActive(true);
+      setIsConnecting(false);
+    } catch (err: any) {
+      setError(err.message || 'Failed to start voice session');
+      setIsConnecting(false);
+      setIsSessionActive(false);
     }
   };
 
+  const handleEndCall = async () => {
+    await endSession();
+    setIsSessionActive(false);
+    setIsMuted(false);
+  };
+
+  const toggleMute = () => {
+    // Note: Actual mute implementation would require additional API from useConversation
+    setIsMuted(!isMuted);
+  };
+
+  const isConnected = status === 'connected';
+
+  const buttonColor = isConnected ? 'bg-[#C0392B]' : 'bg-[#0044CC]';
+  const hoverColor = isConnected ? 'hover:bg-[#a93226]' : 'hover:bg-[#003399]';
+
+  let icon = <Mic size={24} />;
+  let title = "Talk to Voice Agent";
+
+  if (isConnecting) {
+    title = "Connecting...";
+  } else if (isSpeaking) {
+    icon = <Volume2 size={24} className="animate-pulse" />;
+    title = "Agent is speaking...";
+  } else if (isConnected) {
+    icon = <Mic size={24} className="animate-pulse" />;
+    title = "Listening...";
+  }
+
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-300">
-      <div className="bg-white rounded-3xl p-8 max-w-sm w-full text-center relative shadow-2xl animate-in zoom-in-95 duration-300">
-        <button
-          onClick={() => {
-            if (status === 'connected') conversation.endSession();
-            onClose();
-          }}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
-        >
-          <X size={24} />
-        </button>
-
-        <h3 className="text-2xl font-bold mb-8 text-gray-800">Voice Agent</h3>
-
-        <div className="relative mx-auto w-32 h-32 mb-8 flex items-center justify-center">
-          {status === 'connected' && (
-            <div className="absolute inset-0 bg-green-100 rounded-full animate-pulse opacity-75"></div>
-          )}
-          {isSpeaking && (
-            <div className="absolute inset-0 border-4 border-blue-200 rounded-full animate-ping"></div>
-          )}
-
-          <button
-            onClick={toggleConversation}
-            className={`w-24 h-24 rounded-full flex items-center justify-center transition-all transform ${status === 'connected' ? 'bg-red-500 hover:bg-red-600' :
-              status === 'connecting' ? 'bg-blue-400' :
-                'bg-[#0044CC] hover:bg-[#003399] hover:scale-105'
-              } text-white shadow-lg z-10`}
-          >
-            {status === 'connecting' ? (
-              <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
-            ) : status === 'connected' ? (
-              <MicOff size={40} />
-            ) : (
-              <Mic size={40} />
-            )}
-          </button>
-        </div>
-
-        <div className="min-h-[60px]">
-          <p className="text-lg font-medium text-gray-700 mb-2">
-            {status === 'connected' ? (isSpeaking ? "Agent is speaking..." : "Listening...") :
-              status === 'connecting' ? "Connecting..." :
-                "Tap to start conversation"}
-          </p>
-          {status === 'connected' && (
-            <div className="flex justify-center gap-1 mt-2">
-              <div className="w-1 h-1 bg-green-500 rounded-full animate-bounce"></div>
-              <div className="w-1 h-1 bg-green-500 rounded-full animate-bounce delay-75"></div>
-              <div className="w-1 h-1 bg-green-500 rounded-full animate-bounce delay-150"></div>
+    <>
+      {/* Popup Modal - Shows when connected */}
+      {isConnected && (
+        <div className="fixed bottom-48 right-6 z-[60] animate-in fade-in slide-in-from-bottom-4 duration-300">
+          <div className="bg-white rounded-2xl shadow-2xl p-8 w-96 max-w-[calc(100vw-3rem)]">
+            {/* Header */}
+            <div className="text-center mb-6">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-[#C0392B] to-[#a93226] rounded-full mb-4">
+                {isSpeaking ? (
+                  <Volume2 size={32} className="text-white animate-pulse" />
+                ) : (
+                  <Mic size={32} className="text-white animate-pulse" />
+                )}
+              </div>
+              <h3 className="text-2xl font-cinzel font-bold text-gray-900 mb-2">
+                ✨ Your AI Travel Guide
+              </h3>
+              <p className="text-gray-600 text-sm leading-relaxed">
+                I'm here to help you discover Morocco's magic! Ask me anything about destinations,
+                activities, or let me help you plan your perfect Moroccan adventure. 🌟
+              </p>
             </div>
-          )}
+
+            {/* Status Indicator */}
+            <div className="flex items-center justify-center gap-2 mb-6 p-3 bg-green-50 rounded-lg border border-green-200">
+              <span className="flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-green-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+              </span>
+              <span className="text-green-700 font-medium text-sm">
+                {isSpeaking ? "🎙️ Agent Speaking..." : "👂 Listening to you..."}
+              </span>
+            </div>
+
+            {/* Control Buttons */}
+            <div className="flex gap-3 justify-center">
+              {/* Mute Button */}
+              <button
+                onClick={toggleMute}
+                className={`flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all transform hover:scale-105 ${isMuted
+                  ? 'bg-gray-600 hover:bg-gray-700 text-white'
+                  : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                  }`}
+                title={isMuted ? "Unmute" : "Mute"}
+              >
+                {isMuted ? <MicOff size={20} /> : <Mic size={20} />}
+                <span className="text-sm">{isMuted ? "Unmute" : "Mute"}</span>
+              </button>
+
+              {/* End Call Button */}
+              <button
+                onClick={handleEndCall}
+                className="flex items-center gap-2 px-6 py-3 bg-[#C0392B] hover:bg-[#a93226] text-white rounded-full font-medium transition-all transform hover:scale-105 shadow-lg"
+                title="End Call"
+              >
+                <X size={20} />
+                <span className="text-sm">End Call</span>
+              </button>
+            </div>
+
+            {/* Fun Tip */}
+            <div className="mt-6 p-4 bg-[#FFFBF0] rounded-lg border border-[#D4AF37]/30">
+              <p className="text-xs text-gray-600 text-center">
+                💡 <strong>Tip:</strong> Try saying "I want to visit the Sahara Desert" or
+                "What's the best time to visit Marrakech?"
+              </p>
+            </div>
+          </div>
         </div>
+      )}
+
+      {/* Main Button */}
+      <div className="flex flex-col items-center gap-2">
+        {error && <div className="text-red-500 text-xs bg-white p-2 rounded-md shadow-md max-w-[200px] text-center">{error}</div>}
+        <button
+          onClick={handleStartCall}
+          className={`${buttonColor} ${hoverColor} text-white p-4 rounded-full shadow-xl hover:shadow-2xl transition-all transform hover:scale-110 flex items-center justify-center relative`}
+          title={title}
+          disabled={isConnecting || isConnected}
+        >
+          {isConnecting ? (
+            <span className="flex h-6 w-6 relative items-center justify-center">
+              <span className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></span>
+            </span>
+          ) : (
+            icon
+          )}
+          {isConnected && (
+            <span className="absolute -top-1 -right-1 flex h-3 w-3">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+            </span>
+          )}
+        </button>
       </div>
-    </div>
+    </>
   );
 };
-// --- Main App Component ---
 
 const App = () => {
   const [view, setView] = useState<'hero' | 'explore'>('hero');
   const [activeSection, setActiveSection] = useState('cities');
 
-  // n8n Modal States
-  const [isN8nChatOpen, setIsN8nChatOpen] = useState(false);
-  const [isN8nVoiceOpen, setIsN8nVoiceOpen] = useState(false);
-
   useEffect(() => {
-    if (view === 'explore' && !document.getElementById('n8n-chat-script')) {
-      const script = document.createElement('script');
-      script.id = 'n8n-chat-script';
-      script.type = 'module';
-      script.innerHTML = `
-        import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
-        createChat({
-          webhookUrl: '${import.meta.env.VITE_N8N_CHAT_WEBHOOK}',
-          target: '#n8n-chat-container'
-        });
-      `;
-      document.body.appendChild(script);
+    if (view === 'explore') {
+      // Custom Styles for Chat
+      if (!document.getElementById('chat-custom-styles')) {
+        const style = document.createElement('style');
+        style.id = 'chat-custom-styles';
+        style.innerHTML = `
+          :root {
+            --chat--color-primary: #C0392B;
+          }
+          .n8n-chat-widget-toggle {
+            background-color: #C0392B !important;
+          }
+        `;
+        document.head.appendChild(style);
+      }
+
+      // n8n Chat Widget
+      if (!document.getElementById('n8n-chat-script')) {
+        // Inject CSS
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css';
+        document.head.appendChild(link);
+
+        // Inject Script
+        const script = document.createElement('script');
+        script.id = 'n8n-chat-script';
+        script.type = 'module';
+        script.innerHTML = `
+          import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
+          createChat({
+            webhookUrl: 'https://ysssfff2005.app.n8n.cloud/webhook-test/travel',
+            target: '#n8n-chat-container',
+            mode: 'window',
+            style: {
+              primaryColor: '#C0392B',
+              backgroundColor: '#ffffff',
+            }
+          });
+        `;
+        document.body.appendChild(script);
+      }
+
     }
   }, [view]);
 
@@ -645,28 +749,16 @@ const App = () => {
         </div>
       </main>
 
-      {/* Floating Action Buttons */}
-      <div className="fixed bottom-28 right-6 flex flex-col gap-4 z-50 items-end">
-        <div className="relative group">
-          <div className="absolute right-full mr-4 top-1/2 -translate-y-1/2 bg-white px-4 py-2 rounded-xl shadow-lg text-gray-800 font-bold text-sm whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-            Speak with our agent
-            <div className="absolute right-[-6px] top-1/2 -translate-y-1/2 w-3 h-3 bg-white transform rotate-45"></div>
-          </div>
-          <button
-            onClick={() => setIsN8nVoiceOpen(true)}
-            className="bg-[#C0392B] hover:bg-[#a93226] text-white p-4 rounded-full shadow-xl hover:shadow-2xl transition-all transform hover:scale-110 flex items-center justify-center"
-            title="Speak with our agent"
-          >
-            <Mic size={24} />
-          </button>
-        </div>
-      </div>
-
-      {/* n8n Modals */}
-      {isN8nVoiceOpen && <N8nVoiceModal onClose={() => setIsN8nVoiceOpen(false)} />}
-
       {/* n8n Chat Widget Container */}
-      <div id="n8n-chat-container"></div>
+      <div
+        id="n8n-chat-container"
+        className="fixed bottom-6 right-6 z-50"
+      ></div>
+
+      {/* ElevenLabs Voice Widget - Positioned above chat button */}
+      <div className="fixed bottom-28 right-6 z-50">
+        <VoiceAgentButton />
+      </div>
 
       {/* Footer */}
       <footer className="bg-[#2C3E50] text-white py-12 border-t-8 border-[#D4AF37]">
