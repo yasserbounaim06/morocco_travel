@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { createRoot } from 'react-dom/client';
-import { useConversation } from '@elevenlabs/react';
+import React, { useState, useEffect, useRef } from "react";
+import { createRoot } from "react-dom/client";
+import { useConversation } from "@elevenlabs/react";
 import {
   MapPin,
   History,
@@ -25,9 +25,9 @@ import {
   MessageCircle,
   Bot,
   Volume2,
-  VolumeX
-} from 'lucide-react';
-
+  VolumeX,
+  Check,
+} from "lucide-react";
 
 // --- Constants & Data ---
 
@@ -55,6 +55,16 @@ const CITIES = [
       "Bahia Palace",
       "Koutoubia Mosque",
     ],
+    activities: [
+      "Souk Shopping",
+      "Jemaa el-Fnaa Food Tour",
+      "Majorelle Garden Visit",
+      "Hammam Spa Experience",
+      "Hot Air Balloon",
+      "Bahia Palace Tour",
+      "Camel Ride in Palmeraie",
+      "Cooking Class",
+    ],
   },
   {
     name: "Chefchaouen",
@@ -69,6 +79,14 @@ const CITIES = [
       "Spanish Mosque",
       "Kasbah Museum",
       "Ras El Maa Waterfall",
+    ],
+    activities: [
+      "Medina Blue Streets Walk",
+      "Spanish Mosque Sunset Hike",
+      "Akchour Waterfalls Hike",
+      "Kasbah Museum Visit",
+      "Ras El Maa Refreshment",
+      "Shopping for Wool Garments",
     ],
   },
   {
@@ -85,6 +103,15 @@ const CITIES = [
       "Bou Inania Madrasa",
       "Blue Gate",
     ],
+    activities: [
+      "Guided Medina Tour",
+      "Chouara Tannery Visit",
+      "Ceramic & Pottery Workshop",
+      "Al Quaraouiyine Library",
+      "Bou Inania Madrasa",
+      "Traditional Fessi Dinner",
+      "Marinid Tombs Viewpoint",
+    ],
   },
   {
     name: "Merzouga",
@@ -100,6 +127,15 @@ const CITIES = [
       "Star Gazing",
       "Berber Music",
     ],
+    activities: [
+      "Camel Trekking at Sunset",
+      "Overnight Desert Camp",
+      "4x4 Dunes Tour",
+      "Sandboarding",
+      "Stargazing",
+      "Gnawa Music Performance",
+      "Sunrise Watch",
+    ],
   },
   {
     name: "Casablanca",
@@ -110,6 +146,15 @@ const CITIES = [
     details:
       "Casablanca is a port city and commercial hub in western Morocco, fronting the Atlantic Ocean. The city's French colonial legacy is seen in its downtown Mauresque architecture, a blend of Moorish style and European art deco. Standing partly over the water, the enormous Hassan II Mosque, completed in 1993, has a 210m minaret topped with lasers directed toward Mecca.",
     highlights: ["Hassan II Mosque", "Rick's Café", "Corniche", "Old Medina"],
+    activities: [
+      "Hassan II Mosque Tour",
+      "Rick's Café Dinner",
+      "Corniche Stroll",
+      "Morocco Mall Shopping",
+      "Art Deco Architecture Walk",
+      "Old Medina Market",
+      "Museum of Moroccan Judaism",
+    ],
   },
   {
     name: "Essaouira",
@@ -124,6 +169,15 @@ const CITIES = [
       "Essaouira Beach",
       "Fish Market",
       "Gnaoua Festival",
+    ],
+    activities: [
+      "Kitesurfing / Windsurfing",
+      "Skala de la Ville Walk",
+      "Fresh Seafood Lunch",
+      "Medina Art Galleries",
+      "Quad Biking on Dunes",
+      "Horse Riding on Beach",
+      "Gnaoua Music Experience",
     ],
   },
   {
@@ -140,6 +194,14 @@ const CITIES = [
       "Taourirt Kasbah",
       "Fint Oasis",
     ],
+    activities: [
+      "Atlas Film Studios Tour",
+      "Aït Benhaddou Visit",
+      "Taourirt Kasbah Tour",
+      "Fint Oasis Excursion",
+      "Quad Biking",
+      "Sunset at Oasis",
+    ],
   },
   {
     name: "Tangier",
@@ -154,6 +216,123 @@ const CITIES = [
       "Cap Spartel",
       "Kasbah Museum",
       "Grand Socco",
+    ],
+    activities: [
+      "Hercules Caves Visit",
+      "Cap Spartel Views",
+      "Kasbah Museum",
+      "Medina Walking Tour",
+      "Cafe Hafa Mint Tea",
+      "American Legation Museum",
+      "Grand Socco Market",
+    ],
+  },
+  {
+    name: "Agadir",
+    title: "Beach Paradise",
+    image:
+      "https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?q=80&w=800&auto=format&fit=crop",
+    desc: "A modern beach resort city known for its golden sands and year-round sunshine.",
+    details:
+      "Agadir is a port city in southwest Morocco, known for its golf courses, wide crescent beach and seaside promenade lined with cafes, restaurants and bars. The city was rebuilt after a devastating 1960 earthquake, and modern Agadir is a resort destination popular for its Mediterranean climate and Atlantic beaches. The city is a gateway to Paradise Valley and the Anti-Atlas mountains.",
+    highlights: [
+      "Agadir Beach",
+      "Souk El Had",
+      "Agadir Kasbah",
+      "Paradise Valley",
+    ],
+    activities: [
+      "Beach Relaxation",
+      "Surfing Lessons",
+      "Souk El Had Shopping",
+      "Kasbah Viewpoint",
+      "Paradise Valley Day Trip",
+      "Golfing",
+      "Marina Promenade Walk",
+      "Crocoparc Visit",
+      "Argan Oil Massage",
+      "Jet Skiing",
+    ],
+  },
+  {
+    name: "Rabat",
+    title: "The Capital City",
+    image:
+      "https://images.unsplash.com/photo-1539020140153-e479b8c22e70?q=80&w=800&auto=format&fit=crop",
+    desc: "Morocco's elegant capital, blending modernity with historic landmarks and coastal charm.",
+    details:
+      "Rabat, Morocco's capital, sits on the Atlantic Ocean at the mouth of the Bouregreg River. The city is known for its iconic landmarks including the 12th-century Hassan Tower, incomplete minaret of a mosque. Across from it is the ornate Royal Mausoleum, resting place of former Moroccan kings. The medieval fortified Chellah is a quiet area with Roman and Islamic ruins.",
+    highlights: [
+      "Hassan Tower",
+      "Kasbah of the Udayas",
+      "Royal Palace",
+      "Chellah Necropolis",
+    ],
+    activities: [
+      "Hassan Tower Visit",
+      "Mausoleum of Mohammed V",
+      "Kasbah of the Udayas",
+      "Chellah Necropolis",
+      "Andalusian Gardens",
+      "Medina Shopping",
+      "Mohammed VI Museum of Modern Art",
+      "Royal Palace View",
+      "Boat Ride on Bouregreg",
+      "Beach at Temara",
+    ],
+  },
+  {
+    name: "Meknes",
+    title: "The Imperial City",
+    image:
+      "https://images.unsplash.com/photo-1699210260093-e84e21d9b098?q=80&w=800&auto=format&fit=crop",
+    desc: "One of Morocco's four imperial cities, known for grand gates and historic monuments.",
+    details:
+      "Meknes is one of the four imperial cities of Morocco, located in northern central Morocco. Founded in the 11th century by the Almoravids as a military settlement, it became the capital of Morocco under the reign of Sultan Moulay Ismail (1672-1727), who turned it into an impressive city in Spanish-Moorish style, surrounded by high walls with great doors.",
+    highlights: [
+      "Bab Mansour Gate",
+      "Moulay Ismail Mausoleum",
+      "Volubilis Roman Ruins",
+      "Royal Stables",
+    ],
+    activities: [
+      "Bab Mansour Gate",
+      "Moulay Ismail Mausoleum",
+      "Heri es-Souani (Royal Stables)",
+      "Lahdim Square",
+      "Volubilis Roman Ruins (Day Trip)",
+      "Moulay Idriss Zerhoun",
+      "Dar Jamai Museum",
+      "Medina Market Tour",
+      "Agdal Basin",
+      "Kara Prison (Habs Qara)",
+    ],
+  },
+  {
+    name: "Ifrane",
+    title: "Little Switzerland",
+    image:
+      "https://commons.wikimedia.org/wiki/Special:FilePath/Snow_Ifrane.jpg",
+    desc: "A charming mountain town with Alpine architecture and Morocco's premier ski resort.",
+    details:
+      "Ifrane is a town in the Middle Atlas Mountains of Morocco. Built in the 1930s by the French, it has a distinctive European style and is known for its cold and snowy climate. The town is nicknamed 'Little Switzerland' due to its Swiss-style architecture and snow-capped mountains. Home to Al Akhawayn University, it's one of Morocco's cleanest and most unique cities, surrounded by cedar forests and near Michlifen ski resort.",
+    highlights: [
+      "Lion Stone Monument",
+      "Al Akhawayn University",
+      "Cedar Forests",
+      "Michlifen Ski Resort",
+    ],
+    activities: [
+      "Lion Stone Photo",
+      "Al Akhawayn University Tour",
+      "Michlifen Ski Resort",
+      "Cedar Forest Hiking",
+      "Barbary Macaque Watching",
+      "Ain Vittel Spring",
+      "Lake Dayet Aoua",
+      "European Architecture Walk",
+      "Ras El Maa Park",
+      "Azrou Day Trip",
     ],
   },
 ];
@@ -286,9 +465,38 @@ const TripPlanningForm = ({
     departure_date: "",
     return_date: "",
     travelers: 1,
-    activities: "",
+    activities: [] as string[],
     email: "",
   });
+
+  const city = CITIES.find((c) => c.name === cityName);
+  const availableActivities = city?.activities || [];
+  const [selectedActivities, setSelectedActivities] = useState<string[]>([]);
+  const [customActivity, setCustomActivity] = useState("");
+  const [showCustomActivity, setShowCustomActivity] = useState(false);
+
+  // Update formData.activities when selections change
+  useEffect(() => {
+    let all = [...selectedActivities];
+    if (showCustomActivity && customActivity.trim()) {
+      all.push(customActivity.trim());
+    }
+    setFormData((prev) => ({ ...prev, activities: all }));
+
+    // Clear error if activities are selected
+    if (errors.activities && all.length > 0) {
+      setErrors((prev) => ({ ...prev, activities: "" }));
+    }
+  }, [selectedActivities, customActivity, showCustomActivity]);
+
+  const toggleActivity = (activity: string) => {
+    setSelectedActivities((prev) =>
+      prev.includes(activity)
+        ? prev.filter((a) => a !== activity)
+        : [...prev, activity]
+    );
+  };
+
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<
@@ -305,8 +513,8 @@ const TripPlanningForm = ({
       newErrors.return_date = "Return date is required";
     if (formData.travelers < 1)
       newErrors.travelers = "At least 1 traveler required";
-    if (!formData.activities.trim())
-      newErrors.activities = "Please specify your preferred activities";
+    if (formData.activities.length === 0)
+      newErrors.activities = "Please select at least one activity";
     if (!formData.email.trim()) {
       newErrors.email = "Email is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
@@ -344,7 +552,7 @@ const TripPlanningForm = ({
       if (!response.ok) throw new Error("Failed to submit");
 
       setSubmitStatus("success");
-      // Reset form after 2 seconds
+      // Reset form after 3 seconds
       setTimeout(() => {
         setFormData({
           origin: "",
@@ -352,9 +560,12 @@ const TripPlanningForm = ({
           departure_date: "",
           return_date: "",
           travelers: 1,
-          activities: "",
+          activities: [],
           email: "",
         });
+        setSelectedActivities([]);
+        setCustomActivity("");
+        setShowCustomActivity(false);
         setSubmitStatus("idle");
       }, 3000);
     } catch (error) {
@@ -523,22 +734,71 @@ const TripPlanningForm = ({
             )}
           </div>
 
-          {/* Activities */}
+          {/* Activities Selection */}
           <div>
             <label className="block text-sm font-bold text-gray-700 mb-2">
-              Preferred Activities *
+              Preferred Activities * (Select one or more)
             </label>
-            <textarea
-              value={formData.activities}
-              onChange={(e) => handleChange("activities", e.target.value)}
-              placeholder="e.g., Camel trekking, cultural tours, food experiences..."
-              rows={3}
-              className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-all resize-none ${
-                errors.activities
-                  ? "border-red-500 focus:ring-red-200"
-                  : "border-gray-300 focus:ring-[#0044CC]/20"
-              }`}
-            />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+              {availableActivities.map((activity) => (
+                <div
+                  key={activity}
+                  onClick={() => toggleActivity(activity)}
+                  className={`p-3 rounded-lg border cursor-pointer transition-all flex items-center gap-2 ${
+                    selectedActivities.includes(activity)
+                      ? "border-[#0044CC] bg-[#E6EEFA] text-[#0044CC]"
+                      : "border-gray-200 hover:border-[#0044CC]/50 bg-white"
+                  }`}
+                >
+                  <div
+                    className={`w-5 h-5 rounded border flex items-center justify-center ${
+                      selectedActivities.includes(activity)
+                        ? "bg-[#0044CC] border-[#0044CC]"
+                        : "border-gray-300"
+                    }`}
+                  >
+                    {selectedActivities.includes(activity) && (
+                      <Check size={14} className="text-white" />
+                    )}
+                  </div>
+                  <span className="text-sm font-medium">{activity}</span>
+                </div>
+              ))}
+              <div
+                onClick={() => setShowCustomActivity(!showCustomActivity)}
+                className={`p-3 rounded-lg border cursor-pointer transition-all flex items-center gap-2 ${
+                  showCustomActivity
+                    ? "border-[#0044CC] bg-[#E6EEFA] text-[#0044CC]"
+                    : "border-gray-200 hover:border-[#0044CC]/50 bg-white"
+                }`}
+              >
+                <div
+                  className={`w-5 h-5 rounded border flex items-center justify-center ${
+                    showCustomActivity
+                      ? "bg-[#0044CC] border-[#0044CC]"
+                      : "border-gray-300"
+                  }`}
+                >
+                  {showCustomActivity && (
+                    <Check size={14} className="text-white" />
+                  )}
+                </div>
+                <span className="text-sm font-medium">Other</span>
+              </div>
+            </div>
+
+            {showCustomActivity && (
+              <div className="animate-in fade-in slide-in-from-top-2">
+                <input
+                  type="text"
+                  value={customActivity}
+                  onChange={(e) => setCustomActivity(e.target.value)}
+                  placeholder="Type your custom activity..."
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0044CC]/20 transition-all"
+                />
+              </div>
+            )}
+
             {errors.activities && (
               <p className="text-red-500 text-xs mt-1">{errors.activities}</p>
             )}
@@ -690,6 +950,9 @@ const CityModal = ({
                             <div id="form-root"></div>
                             <script type="module">
                               const cityName = "${city.name}";
+                              const cityActivities = ${JSON.stringify(
+                                city.activities
+                              )};
                               const formRoot = document.getElementById('form-root');
                               
                               let formData = {
@@ -698,21 +961,37 @@ const CityModal = ({
                                 departure_date: '',
                                 return_date: '',
                                 travelers: 1,
-                                activities: '',
+                                activities: [],
                                 email: ''
                               };
                               
                               let errors = {};
                               let isSubmitting = false;
                               let submitStatus = 'idle';
+                              let selectedActs = [];
+                              let customAct = '';
+                              let showCustom = false;
                               
+                              function updateActivitiesValue() {
+                                  let all = [...selectedActs];
+                                  if (showCustom && customAct.trim()) {
+                                      all.push(customAct.trim());
+                                  }
+                                  formData.activities = all;
+                                  
+                                  if (formData.activities.length > 0 && errors.activities) {
+                                      delete errors.activities;
+                                      updateErrors();
+                                  }
+                              }
+
                               function validateForm() {
                                 const newErrors = {};
                                 if (!formData.origin.trim()) newErrors.origin = 'Origin is required';
                                 if (!formData.departure_date) newErrors.departure_date = 'Departure date is required';
                                 if (!formData.return_date) newErrors.return_date = 'Return date is required';
                                 if (formData.travelers < 1) newErrors.travelers = 'At least 1 traveler required';
-                                if (!formData.activities.trim()) newErrors.activities = 'Please specify your preferred activities';
+                                if (formData.activities.length === 0) newErrors.activities = 'Please select at least one activity';
                                 if (!formData.email.trim()) {
                                   newErrors.email = 'Email is required';
                                 } else if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(formData.email)) {
@@ -736,11 +1015,7 @@ const CityModal = ({
                                 
                                 isSubmitting = true;
                                 submitStatus = 'idle';
-                                const submitBtn = document.getElementById('submit-btn');
-                                if (submitBtn) {
-                                  submitBtn.disabled = true;
-                                  submitBtn.innerHTML = '<div class="w-5 h-5 border-3 border-white border-t-transparent rounded-full animate-spin"></div> Submitting...';
-                                }
+                                render(); // Re-render to show loading state
                                 
                                 try {
                                   const response = await fetch('https://ysssfff2005.app.n8n.cloud/webhook/morocco-trip-planner', {
@@ -752,39 +1027,31 @@ const CityModal = ({
                                   if (!response.ok) throw new Error('Failed to submit');
                                   
                                   submitStatus = 'success';
-                                  updateStatus();
+                                  render();
                                   
                                   setTimeout(() => {
-                                    // Reset form fields
-                                    document.getElementById('origin').value = '';
-                                    document.getElementById('departure_date').value = '';
-                                    document.getElementById('return_date').value = '';
-                                    document.getElementById('travelers').value = '1';
-                                    document.getElementById('activities').value = '';
-                                    document.getElementById('email').value = '';
-                                    
                                     formData = {
                                       origin: '',
                                       destination: cityName,
                                       departure_date: '',
                                       return_date: '',
                                       travelers: 1,
-                                      activities: '',
+                                      activities: [],
                                       email: ''
                                     };
+                                    selectedActs = [];
+                                    customAct = '';
+                                    showCustom = false;
                                     submitStatus = 'idle';
-                                    updateStatus();
+                                    render();
                                   }, 5000);
                                 } catch (error) {
                                   console.error('Form submission error:', error);
                                   submitStatus = 'error';
-                                  updateStatus();
+                                  render();
                                 } finally {
                                   isSubmitting = false;
-                                  if (submitBtn) {
-                                    submitBtn.disabled = false;
-                                    submitBtn.innerHTML = 'Submit Trip Request →';
-                                  }
+                                  if (submitStatus === 'idle') render();
                                 }
                               }
                               
@@ -797,49 +1064,7 @@ const CityModal = ({
                               }
                               
                               function updateErrors() {
-                                // Update error messages without re-rendering entire form
-                                const fields = ['origin', 'departure_date', 'return_date', 'travelers', 'activities', 'email'];
-                                fields.forEach(field => {
-                                  const errorElement = document.getElementById(\`\${field}-error\`);
-                                  if (errorElement) {
-                                    if (errors[field]) {
-                                      errorElement.textContent = errors[field];
-                                      errorElement.style.display = 'block';
-                                      const input = document.getElementById(field);
-                                      if (input) {
-                                        input.className = input.className.replace('border-gray-300 focus:ring-[#0044CC]/20', 'border-red-500 focus:ring-red-200');
-                                      }
-                                    } else {
-                                      errorElement.style.display = 'none';
-                                      const input = document.getElementById(field);
-                                      if (input) {
-                                        input.className = input.className.replace('border-red-500 focus:ring-red-200', 'border-gray-300 focus:ring-[#0044CC]/20');
-                                      }
-                                    }
-                                  }
-                                });
-                              }
-                              
-                              function updateStatus() {
-                                const statusContainer = document.getElementById('status-container');
-                                if (!statusContainer) return;
-                                
-                                if (submitStatus === 'success') {
-                                  statusContainer.innerHTML = \`
-                                    <div class="mb-6 p-4 bg-green-50 border-l-4 border-green-500 rounded-lg">
-                                      <p class="text-green-800 font-medium mb-2">🎉 Request Received!</p>
-                                      <p class="text-green-700 text-sm">You will receive an email planning your trip to your address.</p>
-                                    </div>
-                                  \`;
-                                } else if (submitStatus === 'error') {
-                                  statusContainer.innerHTML = \`
-                                    <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-lg">
-                                      <p class="text-red-800 font-medium">✗ Failed to submit. Please try again.</p>
-                                    </div>
-                                  \`;
-                                } else {
-                                  statusContainer.innerHTML = '';
-                                }
+                                render();
                               }
                               
                               function render() {
@@ -850,13 +1075,22 @@ const CityModal = ({
                                       <p class="text-[#C0392B] text-sm mt-1">Fill in your travel details</p>
                                     </div>
                                     
-                                    <div id="status-container"></div>
+                                    \${submitStatus === 'success' ? \`
+                                    <div class="mb-6 p-4 bg-green-50 border-l-4 border-green-500 rounded-lg">
+                                      <p class="text-green-800 font-medium mb-2">🎉 Request Received!</p>
+                                      <p class="text-green-700 text-sm">You will receive an email planning your trip to your address.</p>
+                                    </div>\` : ''}
+                                    
+                                    \${submitStatus === 'error' ? \`
+                                    <div class="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-lg">
+                                      <p class="text-red-800 font-medium">✗ Failed to submit. Please try again.</p>
+                                    </div>\` : ''}
                                     
                                     <form id="trip-form" class="space-y-5">
                                       <div>
                                         <label class="block text-sm font-bold text-gray-700 mb-2">Origin (Where are you traveling from?) *</label>
-                                        <input type="text" id="origin" dir="ltr" autocomplete="off" placeholder="Enter your starting city" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0044CC]/20 transition-all" />
-                                        <p id="origin-error" class="text-red-500 text-xs mt-1" style="display: none;"></p>
+                                        <input type="text" id="origin" dir="ltr" value="\${formData.origin}" placeholder="Enter your starting city" class="w-full px-4 py-3 border \${errors.origin ? 'border-red-500 focus:ring-red-200' : 'border-gray-300 focus:ring-[#0044CC]/20'} rounded-xl focus:outline-none focus:ring-2 transition-all" />
+                                        \${errors.origin ? \`<p class="text-red-500 text-xs mt-1">\${errors.origin}</p>\` : ''}
                                       </div>
                                       
                                       <div>
@@ -867,42 +1101,84 @@ const CityModal = ({
                                       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div>
                                           <label class="block text-sm font-bold text-gray-700 mb-2">Departure Date *</label>
-                                          <input type="date" id="departure_date" min="\${new Date().toISOString().split('T')[0]}" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0044CC]/20 transition-all" />
-                                          <p id="departure_date-error" class="text-red-500 text-xs mt-1" style="display: none;"></p>
+                                          <input type="date" id="departure_date" value="\${formData.departure_date}" min="\${new Date().toISOString().split('T')[0]}" class="w-full px-4 py-3 border \${errors.departure_date ? 'border-red-500 focus:ring-red-200' : 'border-gray-300 focus:ring-[#0044CC]/20'} rounded-xl focus:outline-none focus:ring-2 transition-all" />
+                                          \${errors.departure_date ? \`<p class="text-red-500 text-xs mt-1">\${errors.departure_date}</p>\` : ''}
                                         </div>
                                         <div>
                                           <label class="block text-sm font-bold text-gray-700 mb-2">Return Date *</label>
-                                          <input type="date" id="return_date" min="\${new Date().toISOString().split('T')[0]}" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0044CC]/20 transition-all" />
-                                          <p id="return_date-error" class="text-red-500 text-xs mt-1" style="display: none;"></p>
+                                          <input type="date" id="return_date" value="\${formData.return_date}" min="\${new Date().toISOString().split('T')[0]}" class="w-full px-4 py-3 border \${errors.return_date ? 'border-red-500 focus:ring-red-200' : 'border-gray-300 focus:ring-[#0044CC]/20'} rounded-xl focus:outline-none focus:ring-2 transition-all" />
+                                          \${errors.return_date ? \`<p class="text-red-500 text-xs mt-1">\${errors.return_date}</p>\` : ''}
                                         </div>
                                       </div>
                                       
                                       <div>
                                         <label class="block text-sm font-bold text-gray-700 mb-2">Number of Travelers *</label>
-                                        <input type="number" id="travelers" value="1" min="1" max="50" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0044CC]/20 transition-all" />
-                                        <p id="travelers-error" class="text-red-500 text-xs mt-1" style="display: none;"></p>
+                                        <input type="number" id="travelers" value="\${formData.travelers}" min="1" max="50" class="w-full px-4 py-3 border \${errors.travelers ? 'border-red-500 focus:ring-red-200' : 'border-gray-300 focus:ring-[#0044CC]/20'} rounded-xl focus:outline-none focus:ring-2 transition-all" />
+                                        \${errors.travelers ? \`<p class="text-red-500 text-xs mt-1">\${errors.travelers}</p>\` : ''}
                                       </div>
                                       
                                       <div>
                                         <label class="block text-sm font-bold text-gray-700 mb-2">Preferred Activities *</label>
-                                        <textarea id="activities" dir="ltr" autocomplete="off" placeholder="e.g., Camel trekking, cultural tours, food experiences..." rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0044CC]/20 transition-all resize-none"></textarea>
-                                        <p id="activities-error" class="text-red-500 text-xs mt-1" style="display: none;"></p>
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3" id="activities-grid"></div>
+                                        
+                                        <div id="custom-activity-container" class="\${showCustom ? 'block' : 'hidden'} animate-in fade-in slide-in-from-top-2">
+                                            <input type="text" id="custom-activity" value="\${customAct}" placeholder="Type your custom activity..." class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0044CC]/20 transition-all" />
+                                        </div>
+                                        \${errors.activities ? \`<p class="text-red-500 text-xs mt-1">\${errors.activities}</p>\` : ''}
                                       </div>
                                       
                                       <div>
                                         <label class="block text-sm font-bold text-gray-700 mb-2">Email Address *</label>
-                                        <input type="email" id="email" dir="ltr" autocomplete="off" placeholder="your.email@example.com" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0044CC]/20 transition-all" />
-                                        <p id="email-error" class="text-red-500 text-xs mt-1" style="display: none;"></p>
+                                        <input type="email" id="email" dir="ltr" value="\${formData.email}" placeholder="your.email@example.com" class="w-full px-4 py-3 border \${errors.email ? 'border-red-500 focus:ring-red-200' : 'border-gray-300 focus:ring-[#0044CC]/20'} rounded-xl focus:outline-none focus:ring-2 transition-all" />
+                                        \${errors.email ? \`<p class="text-red-500 text-xs mt-1">\${errors.email}</p>\` : ''}
                                       </div>
                                       
                                       <div class="pt-4">
-                                        <button type="submit" id="submit-btn" class="w-full bg-[#2C3E50] text-white py-4 rounded-xl font-bold hover:bg-[#1a252f] transition-all transform hover:-translate-y-1 shadow-lg flex items-center justify-center gap-2">
-                                          Submit Trip Request →
+                                        <button type="submit" id="submit-btn" \${isSubmitting ? 'disabled' : ''} class="w-full bg-[#2C3E50] text-white py-4 rounded-xl font-bold hover:bg-[#1a252f] transition-all transform hover:-translate-y-1 shadow-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                                          \${isSubmitting ? 'Submitting...' : 'Submit Trip Request →'}
                                         </button>
                                       </div>
                                     </form>
                                   </div>
                                 \`;
+                                
+                                // Render activity checkboxes
+                                const grid = document.getElementById('activities-grid');
+                                if (grid) {
+                                    [...cityActivities, 'Other'].forEach(act => {
+                                        const isOther = act === 'Other';
+                                        const isSelected = isOther ? showCustom : selectedActs.includes(act);
+                                        
+                                        const el = document.createElement('div');
+                                        el.className = \`p-3 rounded-lg border cursor-pointer transition-all flex items-center gap-2 \${isSelected ? 'border-[#0044CC] bg-[#E6EEFA] text-[#0044CC]' : 'border-gray-200 hover:border-[#0044CC]/50 bg-white'}\`;
+                                        el.innerHTML = \`
+                                            <div class="w-5 h-5 rounded border \${isSelected ? 'bg-[#0044CC] border-[#0044CC]' : 'border-gray-300'} flex items-center justify-center">
+                                                \${isSelected ? '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>' : ''}
+                                            </div>
+                                            <span class="text-sm font-medium">\${act}</span>
+                                        \`;
+                                        el.onclick = () => {
+                                            if (isOther) {
+                                                showCustom = !showCustom;
+                                                if (!showCustom) customAct = ''; 
+                                            } else {
+                                                if (selectedActs.includes(act)) {
+                                                    selectedActs = selectedActs.filter(a => a !== act);
+                                                } else {
+                                                    selectedActs.push(act);
+                                                }
+                                            }
+                                            updateActivitiesValue();
+                                            render(); // Re-render to update UI
+                                            
+                                            // Focus on custom input if opened
+                                            if (isOther && showCustom) {
+                                                setTimeout(() => document.getElementById('custom-activity')?.focus(), 50);
+                                            }
+                                        };
+                                        grid.appendChild(el);
+                                    });
+                                }
                                 
                                 const form = document.getElementById('trip-form');
                                 if (form) {
@@ -911,8 +1187,11 @@ const CityModal = ({
                                   document.getElementById('departure_date')?.addEventListener('input', (e) => handleChange('departure_date', e.target.value));
                                   document.getElementById('return_date')?.addEventListener('input', (e) => handleChange('return_date', e.target.value));
                                   document.getElementById('travelers')?.addEventListener('input', (e) => handleChange('travelers', parseInt(e.target.value) || 1));
-                                  document.getElementById('activities')?.addEventListener('input', (e) => handleChange('activities', e.target.value));
                                   document.getElementById('email')?.addEventListener('input', (e) => handleChange('email', e.target.value));
+                                  document.getElementById('custom-activity')?.addEventListener('input', (e) => {
+                                      customAct = e.target.value;
+                                      updateActivitiesValue();
+                                  });
                                 }
                               }
                               
@@ -1059,6 +1338,111 @@ const EssentialsView = () => (
           <p className="text-gray-600 text-sm">{item.desc}</p>
         </div>
       ))}
+    </div>
+  </div>
+);
+
+// 5. Kingdom of Football Section
+const KingdomOfFootballView = () => (
+  <div className="py-16 px-6 md:px-12 max-w-7xl mx-auto animate-in fade-in duration-700">
+    <div className="text-center mb-16">
+      <h2 className="text-4xl md:text-5xl font-bold text-[#C0392B] mb-6 font-cinzel">
+        Kingdom of Football
+      </h2>
+      <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+        From the Atlas Lions' historic roar in Qatar to hosting the world in
+        2030, Morocco beats to the rhythm of the beautiful game.
+      </p>
+    </div>
+
+    {/* Achievements Section */}
+    <div className="mb-20">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="space-y-6 order-2 lg:order-1">
+          <h3 className="text-3xl font-bold text-[#2C3E50]">
+            The Historic Achievement
+          </h3>
+          <div className="w-20 h-1 bg-[#C0392B]"></div>
+          <p className="text-gray-600 text-lg leading-relaxed">
+            In 2022, Morocco captivated the world by becoming the first African
+            and Arab nation to reach the World Cup semi-finals. The Atlas Lions
+            demonstrated passion, skill, and unity, defeating football giants
+            and winning hearts globally.
+          </p>
+          <ul className="space-y-3 mt-4">
+            {[
+              "First African nation in World Cup Semi-finals",
+              "Defeated Belgium, Spain, and Portugal",
+              "Showcased world-class talent and team spirit",
+              "United the African and Arab world in celebration",
+            ].map((item, idx) => (
+              <li key={idx} className="flex items-center gap-3">
+                <div className="w-2 h-2 rounded-full bg-[#0044CC]"></div>
+                <span className="text-gray-700 font-medium">{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="relative order-1 lg:order-2 group">
+          <div className="absolute -inset-4 bg-[#C0392B]/20 rounded-2xl rotate-3 transition-transform group-hover:rotate-6"></div>
+          <img
+            src="/images/morocco_fans.png"
+            alt="Morocco Football Fans"
+            className="relative rounded-2xl shadow-2xl w-full h-[400px] object-cover transform transition-transform group-hover:scale-[1.02]"
+          />
+        </div>
+      </div>
+    </div>
+
+    {/* 2030 Vision Section */}
+    <div className="relative bg-[#2C3E50] rounded-3xl overflow-hidden text-white p-8 md:p-16">
+      <div className="absolute top-0 right-0 w-full h-full opacity-20 bg-[url('/images/morocco_stadium_2030.png')] bg-cover bg-center"></div>
+      <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <span className="text-[#F5E6CA] font-bold tracking-wider uppercase mb-2 block">
+            The Future is Here
+          </span>
+          <h3 className="text-4xl font-bold mb-6 font-cinzel">
+            World Cup 2030
+          </h3>
+          <p className="text-gray-300 text-lg leading-relaxed mb-8">
+            Morocco is proud to co-host the 2030 FIFA World Cup alongside Spain
+            and Portugal. This historic tournament will bridge continents and
+            cultures, showcasing Morocco's modern infrastructure, legendary
+            hospitality, and unwavering love for football.
+          </p>
+          <div className="grid grid-cols-2 gap-6">
+            <div className="bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/20">
+              <span className="block text-3xl font-bold text-[#F5E6CA] mb-1">
+                6+
+              </span>
+              <span className="text-sm text-gray-300">
+                World-Class Stadiums
+              </span>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm p-4 rounded-xl border border-white/20">
+              <span className="block text-3xl font-bold text-[#F5E6CA] mb-1">
+                100th
+              </span>
+              <span className="text-sm text-gray-300">
+                Anniversary of World Cup
+              </span>
+            </div>
+          </div>
+        </div>
+        <div className="flex justify-center items-center">
+          <div className="relative w-full max-w-md aspect-video bg-gradient-to-br from-[#C0392B] to-[#0044CC] rounded-2xl shadow-2xl flex items-center justify-center p-8 text-center border-4 border-[#F5E6CA]">
+            <div>
+              <h4 className="text-3xl font-bold font-cinzel mb-2">
+                MOROCCO 2030
+              </h4>
+              <p className="text-sm tracking-[0.2em] uppercase opacity-90">
+                Yallah!
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 );
@@ -1250,7 +1634,6 @@ const N8nChatModal = ({ onClose }: { onClose: () => void }) => {
   );
 };
 
-
 // --- Main App Component ---
 
 const VoiceAgentButton = () => {
@@ -1269,13 +1652,13 @@ const VoiceAgentButton = () => {
 
       // Start the conversation session
       await startSession({
-        agentId: 'agent_8201k9pp5feqf0g8kb0wpj6z3jft',
-        connectionType: 'webrtc',
+        agentId: "agent_8201k9pp5feqf0g8kb0wpj6z3jft",
+        connectionType: "webrtc",
       });
       setIsSessionActive(true);
       setIsConnecting(false);
     } catch (err: any) {
-      setError(err.message || 'Failed to start voice session');
+      setError(err.message || "Failed to start voice session");
       setIsConnecting(false);
       setIsSessionActive(false);
     }
@@ -1292,10 +1675,10 @@ const VoiceAgentButton = () => {
     setIsMuted(!isMuted);
   };
 
-  const isConnected = status === 'connected';
+  const isConnected = status === "connected";
 
-  const buttonColor = isConnected ? 'bg-[#C0392B]' : 'bg-[#0044CC]';
-  const hoverColor = isConnected ? 'hover:bg-[#a93226]' : 'hover:bg-[#003399]';
+  const buttonColor = isConnected ? "bg-[#C0392B]" : "bg-[#0044CC]";
+  const hoverColor = isConnected ? "hover:bg-[#a93226]" : "hover:bg-[#003399]";
 
   let icon = <Mic size={24} />;
   let title = "Talk to Voice Agent";
@@ -1329,8 +1712,9 @@ const VoiceAgentButton = () => {
                 ✨ Your AI Travel Guide
               </h3>
               <p className="text-gray-600 text-sm leading-relaxed">
-                I'm here to help you discover Morocco's magic! Ask me anything about destinations,
-                activities, or let me help you plan your perfect Moroccan adventure. 🌟
+                I'm here to help you discover Morocco's magic! Ask me anything
+                about destinations, activities, or let me help you plan your
+                perfect Moroccan adventure. 🌟
               </p>
             </div>
 
@@ -1350,10 +1734,11 @@ const VoiceAgentButton = () => {
               {/* Mute Button */}
               <button
                 onClick={toggleMute}
-                className={`flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all transform hover:scale-105 ${isMuted
-                  ? 'bg-gray-600 hover:bg-gray-700 text-white'
-                  : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
-                  }`}
+                className={`flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all transform hover:scale-105 ${
+                  isMuted
+                    ? "bg-gray-600 hover:bg-gray-700 text-white"
+                    : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+                }`}
                 title={isMuted ? "Unmute" : "Mute"}
               >
                 {isMuted ? <MicOff size={20} /> : <Mic size={20} />}
@@ -1374,8 +1759,8 @@ const VoiceAgentButton = () => {
             {/* Fun Tip */}
             <div className="mt-6 p-4 bg-[#FFFBF0] rounded-lg border border-[#D4AF37]/30">
               <p className="text-xs text-gray-600 text-center">
-                💡 <strong>Tip:</strong> Try saying "I want to visit the Sahara Desert" or
-                "What's the best time to visit Marrakech?"
+                💡 <strong>Tip:</strong> Try saying "I want to visit the Sahara
+                Desert" or "What's the best time to visit Marrakech?"
               </p>
             </div>
           </div>
@@ -1384,7 +1769,11 @@ const VoiceAgentButton = () => {
 
       {/* Main Button */}
       <div className="flex flex-col items-center gap-2">
-        {error && <div className="text-red-500 text-xs bg-white p-2 rounded-md shadow-md max-w-[200px] text-center">{error}</div>}
+        {error && (
+          <div className="text-red-500 text-xs bg-white p-2 rounded-md shadow-md max-w-[200px] text-center">
+            {error}
+          </div>
+        )}
         <button
           onClick={handleStartCall}
           className={`${buttonColor} ${hoverColor} text-white p-4 rounded-full shadow-xl hover:shadow-2xl transition-all transform hover:scale-110 flex items-center justify-center relative`}
@@ -1410,9 +1799,44 @@ const VoiceAgentButton = () => {
   );
 };
 
+const N8nVoiceModal = ({ onClose }: { onClose: () => void }) => {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm animate-in fade-in duration-300">
+      <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full mx-4 relative animate-in zoom-in-95 duration-300">
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+        >
+          <X size={24} />
+        </button>
+
+        <div className="text-center">
+          <div className="w-16 h-16 bg-[#C0392B]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Mic size={32} className="text-[#C0392B]" />
+          </div>
+          <h3 className="text-2xl font-bold text-gray-900 mb-2">
+            Voice Assistant
+          </h3>
+          <p className="text-gray-600 mb-6">
+            Our AI voice assistant is currently being updated. Please use the
+            chat widget or the other voice agent button below.
+          </p>
+          <button
+            onClick={onClose}
+            className="w-full bg-[#C0392B] text-white py-3 rounded-xl font-bold hover:bg-[#a93226] transition-colors"
+          >
+            Got it
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const App = () => {
   const [view, setView] = useState<"hero" | "explore">("hero");
   const [activeSection, setActiveSection] = useState("cities");
+  const [isN8nVoiceOpen, setIsN8nVoiceOpen] = useState(false);
 
   useEffect(() => {
     if (view === "explore" && !document.getElementById("n8n-chat-script")) {
@@ -1455,17 +1879,22 @@ const App = () => {
             </div>
 
             <div className="hidden md:flex space-x-8">
-              {["cities", "history", "essentials"].map((section) => (
+              {[
+                { id: "cities", label: "Cities" },
+                { id: "history", label: "History" },
+                { id: "football", label: "Football" },
+                { id: "essentials", label: "Essentials" },
+              ].map(({ id, label }) => (
                 <button
-                  key={section}
-                  onClick={() => setActiveSection(section)}
+                  key={id}
+                  onClick={() => setActiveSection(id)}
                   className={`font-cinzel font-medium text-sm uppercase tracking-wider transition-colors ${
-                    activeSection === section
+                    activeSection === id
                       ? "text-[#C0392B] border-b-2 border-[#C0392B]"
                       : "text-gray-500 hover:text-[#C0392B]"
                   } pb-1`}
                 >
-                  {section}
+                  {label}
                 </button>
               ))}
             </div>
@@ -1492,6 +1921,12 @@ const App = () => {
           {activeSection === "history" && (
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
               <HistoryView />
+            </div>
+          )}
+
+          {activeSection === "football" && (
+            <div className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+              <KingdomOfFootballView />
             </div>
           )}
 
@@ -1559,7 +1994,13 @@ const App = () => {
                 onClick={() => setActiveSection("history")}
                 className="hover:text-white cursor-pointer transition-colors"
               >
-                Cultural Heritage
+                History
+              </li>
+              <li
+                onClick={() => setActiveSection("football")}
+                className="hover:text-white cursor-pointer transition-colors"
+              >
+                Kingdom of Football
               </li>
               <li
                 onClick={() => setActiveSection("essentials")}
