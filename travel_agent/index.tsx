@@ -363,6 +363,16 @@ const HISTORY_EVENTS = [
     title: "Independence",
     desc: "Morocco gains independence and King Mohammed V returns from exile.",
   },
+  {
+    year: "1975",
+    title: "Green March (La Marche Verte)",
+    desc: "350,000 unarmed Moroccans march into the Sahara, marking a peaceful reclamation of the southern provinces.",
+  },
+  {
+    year: "2025",
+    title: "Nationnal Unity Day (Aid Al Wahda)",
+    desc: "Morocco celebrates the new official holiday commemorating Sahara's return to sovereignty and national unity, following the United Nations' vote recognizing Morocco's sovereignty over the territory.",
+  },
 ];
 
 const ESSENTIALS = [
@@ -637,11 +647,10 @@ const TripPlanningForm = ({
               value={formData.origin}
               onChange={(e) => handleChange("origin", e.target.value)}
               placeholder="Enter your starting city"
-              className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-all ${
-                errors.origin
-                  ? "border-red-500 focus:ring-red-200"
-                  : "border-gray-300 focus:ring-[#0044CC]/20"
-              }`}
+              className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-all ${errors.origin
+                ? "border-red-500 focus:ring-red-200"
+                : "border-gray-300 focus:ring-[#0044CC]/20"
+                }`}
             />
             {errors.origin && (
               <p className="text-red-500 text-xs mt-1">{errors.origin}</p>
@@ -672,11 +681,10 @@ const TripPlanningForm = ({
                 value={formData.departure_date}
                 onChange={(e) => handleChange("departure_date", e.target.value)}
                 min={new Date().toISOString().split("T")[0]}
-                className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-all ${
-                  errors.departure_date
-                    ? "border-red-500 focus:ring-red-200"
-                    : "border-gray-300 focus:ring-[#0044CC]/20"
-                }`}
+                className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-all ${errors.departure_date
+                  ? "border-red-500 focus:ring-red-200"
+                  : "border-gray-300 focus:ring-[#0044CC]/20"
+                  }`}
               />
               {errors.departure_date && (
                 <p className="text-red-500 text-xs mt-1">
@@ -696,11 +704,10 @@ const TripPlanningForm = ({
                   formData.departure_date ||
                   new Date().toISOString().split("T")[0]
                 }
-                className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-all ${
-                  errors.return_date
-                    ? "border-red-500 focus:ring-red-200"
-                    : "border-gray-300 focus:ring-[#0044CC]/20"
-                }`}
+                className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-all ${errors.return_date
+                  ? "border-red-500 focus:ring-red-200"
+                  : "border-gray-300 focus:ring-[#0044CC]/20"
+                  }`}
               />
               {errors.return_date && (
                 <p className="text-red-500 text-xs mt-1">
@@ -723,11 +730,10 @@ const TripPlanningForm = ({
               }
               min="1"
               max="50"
-              className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-all ${
-                errors.travelers
-                  ? "border-red-500 focus:ring-red-200"
-                  : "border-gray-300 focus:ring-[#0044CC]/20"
-              }`}
+              className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-all ${errors.travelers
+                ? "border-red-500 focus:ring-red-200"
+                : "border-gray-300 focus:ring-[#0044CC]/20"
+                }`}
             />
             {errors.travelers && (
               <p className="text-red-500 text-xs mt-1">{errors.travelers}</p>
@@ -744,18 +750,16 @@ const TripPlanningForm = ({
                 <div
                   key={activity}
                   onClick={() => toggleActivity(activity)}
-                  className={`p-3 rounded-lg border cursor-pointer transition-all flex items-center gap-2 ${
-                    selectedActivities.includes(activity)
-                      ? "border-[#0044CC] bg-[#E6EEFA] text-[#0044CC]"
-                      : "border-gray-200 hover:border-[#0044CC]/50 bg-white"
-                  }`}
+                  className={`p-3 rounded-lg border cursor-pointer transition-all flex items-center gap-2 ${selectedActivities.includes(activity)
+                    ? "border-[#0044CC] bg-[#E6EEFA] text-[#0044CC]"
+                    : "border-gray-200 hover:border-[#0044CC]/50 bg-white"
+                    }`}
                 >
                   <div
-                    className={`w-5 h-5 rounded border flex items-center justify-center ${
-                      selectedActivities.includes(activity)
-                        ? "bg-[#0044CC] border-[#0044CC]"
-                        : "border-gray-300"
-                    }`}
+                    className={`w-5 h-5 rounded border flex items-center justify-center ${selectedActivities.includes(activity)
+                      ? "bg-[#0044CC] border-[#0044CC]"
+                      : "border-gray-300"
+                      }`}
                   >
                     {selectedActivities.includes(activity) && (
                       <Check size={14} className="text-white" />
@@ -766,18 +770,16 @@ const TripPlanningForm = ({
               ))}
               <div
                 onClick={() => setShowCustomActivity(!showCustomActivity)}
-                className={`p-3 rounded-lg border cursor-pointer transition-all flex items-center gap-2 ${
-                  showCustomActivity
-                    ? "border-[#0044CC] bg-[#E6EEFA] text-[#0044CC]"
-                    : "border-gray-200 hover:border-[#0044CC]/50 bg-white"
-                }`}
+                className={`p-3 rounded-lg border cursor-pointer transition-all flex items-center gap-2 ${showCustomActivity
+                  ? "border-[#0044CC] bg-[#E6EEFA] text-[#0044CC]"
+                  : "border-gray-200 hover:border-[#0044CC]/50 bg-white"
+                  }`}
               >
                 <div
-                  className={`w-5 h-5 rounded border flex items-center justify-center ${
-                    showCustomActivity
-                      ? "bg-[#0044CC] border-[#0044CC]"
-                      : "border-gray-300"
-                  }`}
+                  className={`w-5 h-5 rounded border flex items-center justify-center ${showCustomActivity
+                    ? "bg-[#0044CC] border-[#0044CC]"
+                    : "border-gray-300"
+                    }`}
                 >
                   {showCustomActivity && (
                     <Check size={14} className="text-white" />
@@ -814,11 +816,10 @@ const TripPlanningForm = ({
               value={formData.email}
               onChange={(e) => handleChange("email", e.target.value)}
               placeholder="your.email@example.com"
-              className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-all ${
-                errors.email
-                  ? "border-red-500 focus:ring-red-200"
-                  : "border-gray-300 focus:ring-[#0044CC]/20"
-              }`}
+              className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition-all ${errors.email
+                ? "border-red-500 focus:ring-red-200"
+                : "border-gray-300 focus:ring-[#0044CC]/20"
+                }`}
             />
             {errors.email && (
               <p className="text-red-500 text-xs mt-1">{errors.email}</p>
@@ -951,8 +952,8 @@ const CityModal = ({
                             <script type="module">
                               const cityName = "${city.name}";
                               const cityActivities = ${JSON.stringify(
-                                city.activities
-                              )};
+                        city.activities
+                      )};
                               const formRoot = document.getElementById('form-root');
                               
                               let formData = {
@@ -1394,6 +1395,65 @@ const KingdomOfFootballView = () => (
       </div>
     </div>
 
+    {/* Africa Cup Section */}
+    <div className="mb-20">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="relative order-1 lg:order-1 group">
+          <div className="absolute -inset-4 bg-[#2ECC71]/20 rounded-2xl -rotate-3 transition-transform group-hover:-rotate-6"></div>
+          <div className="relative bg-gradient-to-br from-[#2ECC71] to-[#0044CC] rounded-2xl shadow-2xl p-8 flex items-center justify-center h-[400px] border-4 border-[#F5E6CA]">
+            <div className="text-center text-white">
+              <h4 className="text-4xl font-bold font-cinzel mb-4">AFRICA CUP</h4>
+              <p className="text-2xl font-bold mb-2">🏆 Champions</p>
+              <p className="text-lg tracking-wider uppercase">Continental Pride</p>
+            </div>
+          </div>
+        </div>
+        <div className="space-y-6 order-2 lg:order-2">
+          <h3 className="text-3xl font-bold text-[#2C3E50]">
+            Africa Cup of Nations Glory
+          </h3>
+          <div className="w-20 h-1 bg-[#2ECC71]"></div>
+          <p className="text-gray-600 text-lg leading-relaxed">
+            Morocco has left an indelible mark on African football, showcasing
+            excellence and determination in the continent's most prestigious
+            tournament. The Atlas Lions have consistently demonstrated their
+            prowess on home soil and across Africa.
+          </p>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="bg-[#2ECC71]/10 p-4 rounded-xl border-2 border-[#2ECC71]/30">
+              <span className="block text-3xl font-bold text-[#2ECC71] mb-1">
+                1x
+              </span>
+              <span className="text-sm text-gray-600">
+                Africa Cup Champion
+              </span>
+            </div>
+            <div className="bg-[#2ECC71]/10 p-4 rounded-xl border-2 border-[#2ECC71]/30">
+              <span className="block text-3xl font-bold text-[#2ECC71] mb-1">
+                19x
+              </span>
+              <span className="text-sm text-gray-600">
+                Tournament Appearances
+              </span>
+            </div>
+          </div>
+          <ul className="space-y-3 mt-4">
+            {[
+              "1976 Africa Cup Champions - Home Glory",
+              "Multiple runner-up finishes (2004, 1980)",
+              "Consistent continental powerhouse",
+              "Hosting legacy and passionate fanbase",
+            ].map((item, idx) => (
+              <li key={idx} className="flex items-center gap-3">
+                <div className="w-2 h-2 rounded-full bg-[#2ECC71]"></div>
+                <span className="text-gray-700 font-medium">{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+
     {/* 2030 Vision Section */}
     <div className="relative bg-[#2C3E50] rounded-3xl overflow-hidden text-white p-8 md:p-16">
       <div className="absolute top-0 right-0 w-full h-full opacity-20 bg-[url('/images/morocco_stadium_2030.png')] bg-cover bg-center"></div>
@@ -1586,16 +1646,14 @@ const N8nChatModal = ({ onClose }: { onClose: () => void }) => {
           {messages.map((m, i) => (
             <div
               key={i}
-              className={`flex ${
-                m.role === "user" ? "justify-end" : "justify-start"
-              }`}
+              className={`flex ${m.role === "user" ? "justify-end" : "justify-start"
+                }`}
             >
               <div
-                className={`max-w-[80%] p-3 rounded-2xl text-sm ${
-                  m.role === "user"
-                    ? "bg-[#0044CC] text-white rounded-tr-none"
-                    : "bg-white text-gray-800 border border-gray-200 rounded-tl-none shadow-sm"
-                }`}
+                className={`max-w-[80%] p-3 rounded-2xl text-sm ${m.role === "user"
+                  ? "bg-[#0044CC] text-white rounded-tr-none"
+                  : "bg-white text-gray-800 border border-gray-200 rounded-tl-none shadow-sm"
+                  }`}
               >
                 {m.text}
               </div>
@@ -1734,11 +1792,10 @@ const VoiceAgentButton = () => {
               {/* Mute Button */}
               <button
                 onClick={toggleMute}
-                className={`flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all transform hover:scale-105 ${
-                  isMuted
-                    ? "bg-gray-600 hover:bg-gray-700 text-white"
-                    : "bg-gray-100 hover:bg-gray-200 text-gray-700"
-                }`}
+                className={`flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all transform hover:scale-105 ${isMuted
+                  ? "bg-gray-600 hover:bg-gray-700 text-white"
+                  : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+                  }`}
                 title={isMuted ? "Unmute" : "Mute"}
               >
                 {isMuted ? <MicOff size={20} /> : <Mic size={20} />}
@@ -1799,44 +1856,10 @@ const VoiceAgentButton = () => {
   );
 };
 
-const N8nVoiceModal = ({ onClose }: { onClose: () => void }) => {
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm animate-in fade-in duration-300">
-      <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full mx-4 relative animate-in zoom-in-95 duration-300">
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
-        >
-          <X size={24} />
-        </button>
-
-        <div className="text-center">
-          <div className="w-16 h-16 bg-[#C0392B]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Mic size={32} className="text-[#C0392B]" />
-          </div>
-          <h3 className="text-2xl font-bold text-gray-900 mb-2">
-            Voice Assistant
-          </h3>
-          <p className="text-gray-600 mb-6">
-            Our AI voice assistant is currently being updated. Please use the
-            chat widget or the other voice agent button below.
-          </p>
-          <button
-            onClick={onClose}
-            className="w-full bg-[#C0392B] text-white py-3 rounded-xl font-bold hover:bg-[#a93226] transition-colors"
-          >
-            Got it
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 const App = () => {
   const [view, setView] = useState<"hero" | "explore">("hero");
   const [activeSection, setActiveSection] = useState("cities");
-  const [isN8nVoiceOpen, setIsN8nVoiceOpen] = useState(false);
 
   useEffect(() => {
     if (view === "explore" && !document.getElementById("n8n-chat-script")) {
@@ -1888,11 +1911,10 @@ const App = () => {
                 <button
                   key={id}
                   onClick={() => setActiveSection(id)}
-                  className={`font-cinzel font-medium text-sm uppercase tracking-wider transition-colors ${
-                    activeSection === id
-                      ? "text-[#C0392B] border-b-2 border-[#C0392B]"
-                      : "text-gray-500 hover:text-[#C0392B]"
-                  } pb-1`}
+                  className={`font-cinzel font-medium text-sm uppercase tracking-wider transition-colors ${activeSection === id
+                    ? "text-[#C0392B] border-b-2 border-[#C0392B]"
+                    : "text-gray-500 hover:text-[#C0392B]"
+                    } pb-1`}
                 >
                   {label}
                 </button>
@@ -1938,27 +1960,9 @@ const App = () => {
         </div>
       </main>
 
-      {/* Floating Action Buttons */}
-      <div className="fixed bottom-28 right-6 flex flex-col gap-4 z-50 items-end">
-        <div className="relative group">
-          <div className="absolute right-full mr-4 top-1/2 -translate-y-1/2 bg-white px-4 py-2 rounded-xl shadow-lg text-gray-800 font-bold text-sm whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-            Speak with our agent
-            <div className="absolute right-[-6px] top-1/2 -translate-y-1/2 w-3 h-3 bg-white transform rotate-45"></div>
-          </div>
-          <button
-            onClick={() => setIsN8nVoiceOpen(true)}
-            className="bg-[#C0392B] hover:bg-[#a93226] text-white p-4 rounded-full shadow-xl hover:shadow-2xl transition-all transform hover:scale-110 flex items-center justify-center"
-            title="Speak with our agent"
-          >
-            <Mic size={24} />
-          </button>
-        </div>
-      </div>
 
-      {/* n8n Modals */}
-      {isN8nVoiceOpen && (
-        <N8nVoiceModal onClose={() => setIsN8nVoiceOpen(false)} />
-      )}
+
+
 
       {/* n8n Chat Widget Container */}
       <div
@@ -1967,7 +1971,7 @@ const App = () => {
       ></div>
 
       {/* ElevenLabs Voice Widget - Positioned above chat button */}
-      <div className="fixed bottom-28 right-6 z-50">
+      <div className="fixed bottom-28 right-6 z-40">
         <VoiceAgentButton />
       </div>
 
@@ -2011,8 +2015,19 @@ const App = () => {
             </ul>
           </div>
         </div>
-        <div className="text-center mt-12 text-gray-500 text-xs">
-          © {new Date().getFullYear()} Discover Morocco. All rights reserved.
+        <div className="text-center mt-12">
+          <p className="text-gray-400 text-sm mb-2">
+            Made by Ministry of National Education, Preschool and Sports, Morocco.
+          </p>
+          <p className="text-gray-500 text-xs mb-4">
+            © {new Date().getFullYear()} Discover Morocco. All rights reserved.
+          </p>
+          <div className="text-gray-400 text-xs mt-6 space-y-2">
+            <p className="font-semibold">Supervised by:</p>
+            <p>Dr. Youssef BAALA, Dr. Lamia ELJADIRI</p>
+            <p className="font-semibold mt-3">Students:</p>
+            <p>Youssef ATIF, Yasser BOUNAIM</p>
+          </div>
         </div>
       </footer>
     </div>
