@@ -2025,7 +2025,7 @@ const App = () => {
           <div className="text-gray-400 text-xs mt-6 space-y-2">
             <p className="font-semibold">Supervised by:</p>
             <p>Dr. Youssef BAALA, Dr. Lamia ELJADIRI</p>
-            <p className="font-semibold mt-3">Students:</p>
+            <p className="font-semibold mt-3">Mentors:</p>
             <p>Youssef ATIF, Yasser BOUNAIM</p>
           </div>
         </div>
